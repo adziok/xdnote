@@ -1,5 +1,5 @@
 import { UseInterceptors } from '@nestjs/common';
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, MessageBody } from '@nestjs/websockets';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -13,6 +13,18 @@ export class EventsGateway {
         return from([1, 2, 3]).pipe(
             map((item) => {
                 return { event: 'events', data: item };
+            }),
+        );
+    }
+    
+    @SubscribeMessage('message-changed')
+    public a(
+      @MessageBody() data: string,
+    ): Observable<any> {
+      console.log(data);
+        return from(data).pipe(
+            map((item) => {
+                return { event: 'events2', data: item };
             }),
         );
     }
